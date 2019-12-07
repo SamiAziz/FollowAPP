@@ -1,0 +1,277 @@
+fragment TaskFields on Task {
+  id
+  letter
+  letterBarcode
+  assigneesName
+  assigneesUsername
+  creator
+  creatorName
+  creatorUsername
+  note
+  taskType
+  status
+  createdAt
+  updatedAt
+}
+
+fragment TaskTypesFeilds on TaskTypes {
+  id
+  taskType
+  taskDesc
+  createdAt
+}
+
+fragment FromFields on From {
+  id
+  from
+}
+
+fragment FolderFields on Folder {
+  id
+  name
+  parent
+  description
+  shareWith
+}
+
+fragment UserFields on User {
+  id
+  name
+  userName
+  password
+  role
+  status
+  createdAt
+}
+
+fragment LetterFields on Letter {
+  id
+  barcode
+  letterNo
+  letterDate
+  letterType
+  from
+  subject
+  status
+  related
+  task
+  assigneesName
+  assigneesStatus
+  level
+  priority
+  entry
+  createdAt
+  updatedAt
+}
+
+fragment GroupFields on Group {
+  id
+  team
+  name
+  initials
+  avatarColor
+  users
+}
+
+fragment RecordFields on Record {
+  id
+  user
+  task
+  date
+  timeSpent
+  comment
+}
+
+mutation Signup($id: String!, $firstname: String!, $lastname: String!, $password: String!) {
+  signup(id: $id, firstname: $firstname, lastname: $lastname, password: $password) {
+    token
+    user {
+      id
+      email
+    }
+  }
+}
+
+mutation Login($userName: String!, $password: String!) {
+  login(userName: $userName, password: $password) {
+    token
+    user {
+      id
+      name
+      userName
+      role
+    }
+  }
+}
+
+mutation CreateTask($letter: String, $letterBarcode: String, $assigneesName: String, $assigneesUsername: String, $creator: String, $creatorName: String, $creatorUsername: String, $note: String, $taskType: String, $status: String) {
+  createTask(letter: $letter, letterBarcode: $letterBarcode, assigneesName: $assigneesName, assigneesUsername: $assigneesUsername, creator: $creator, creatorName: $creatorName, creatorUsername: $creatorUsername, note: $note, taskType: $taskType, status: $status) { ...TaskFields }
+}
+
+mutation CreateFrom($from: String) {
+  createFrom(from: $from) { ...FromFields }
+}
+
+mutation DeleteFrom($id: String!) {
+  deleteFrom(id: $id)
+}
+
+mutation UpdateTask($id: String!, $input: TaskInput) {
+  updateTask(id: $id, input: $input) { ...TaskFields }
+}
+
+mutation DeleteTask($id: String!) {
+  deleteTask(id: $id)
+}
+
+mutation CreateTaskType($taskType: String, $taskDesc: String) {
+  createTaskType(taskType: $taskType, taskDesc: $taskDesc) { ...TaskTypesFeilds }
+}
+
+mutation UpdateTaskType($id: String!) {
+  updateTaskType(id: $id) { ...TaskTypesFeilds }
+}
+
+mutation DeleteTaskType($id: String!) {
+  deleteTaskType(id: $id)
+}
+
+mutation CreateFolder($parent: String, $name: String!, $shareWith: [ShareInput]) {
+  createFolder(parent: $parent, name: $name, shareWith: $shareWith) {
+    ...FolderFields
+  }
+}
+
+mutation UpdateFolder($id: String!, $input: FolderInput) {
+  updateFolder(id: $id, input: $input) { ...FolderFields }
+}
+
+mutation DeleteFolder($id: String!) {
+  deleteFolder(id: $id)
+}
+
+mutation CreateGroup($name: String, $initials: String, $avatarColor: String, $users: [String]) {
+  createGroup(name: $name, initials: $initials, avatarColor: $avatarColor, users: $users) {
+    ...GroupFields
+  }
+}
+
+mutation AddUsersToGroup($id: String!, $users: [String]) {
+  addUsersToGroup(id: $id, users: $users) {
+    ...GroupFields
+  }
+}
+
+mutation RemoveUsersFromGroup($id: String!, $users: [String]) {
+  removeUsersFromGroup(id: $id, users: $users) {
+    ...GroupFields
+  }
+}
+
+mutation UpdateGroup($id: String!, $name: String, $initials: String, $avatarColor: String) {
+  updateGroup(id: $id, name: $name, initials: $initials, avatarColor: $avatarColor) {
+    ...GroupFields
+  }
+}
+
+mutation DeleteGroup($id: String!) {
+  deleteGroup(id: $id)
+}
+
+
+
+mutation CreateUser($name: String!, $userName: String!, $password: String!, $role: String, $status: String) {
+  createUser(name: $name, userName: $userName, password: $password, role: $role, status: $status) {
+    ...UserFields
+  }
+}
+
+mutation DeleteUser($id: String!) {
+  deleteUser(id: $id)
+}
+
+
+mutation UpdateUser($id: String!, $input: UserInput) {
+  updateUser(id: $id, input: $input) { ...UserFields }
+}
+
+mutation CreateLetter($barcode: String!, $letterNo: String!, $letterDate: String, $letterType: String, $from: String!, $subject: String, $status: String, $related: String, $task: String, $assigneesName: String, $assigneesStatus: String, $level: String, $priority: String, $entry: String) {
+  createLetter(barcode: $barcode, letterNo: $letterNo, letterDate: $letterDate, letterType: $letterType, from: $from, subject: $subject, status: $status, related: $related, task: $task, assigneesName: $assigneesName, assigneesStatus: $assigneesStatus, level: $level, priority: $priority, entry: $entry) {
+    ...LetterFields
+  }
+}
+
+mutation UpdateLetter($id: String!, $input: LetterInput) {
+  updateLetter(id: $id, input: $input) { ...LetterFields }
+}
+
+mutation CreateRecord($input: RecordInput) {
+  createRecord(input: $input) { ...RecordFields }
+}
+
+mutation UpdateRecord($id: String!, $input: RecordInput) {
+  updateRecord(id: $id, input: $input) { ...RecordFields }
+}
+
+mutation DeleteRecord($id: String!) {
+  deleteRecord(id: $id)
+}
+
+query GetTeam {
+  getTeam {
+    id
+    name
+  }
+}
+
+query GetFrom {
+  getFrom {
+    id
+    from
+  }
+}
+
+query GetUser($id: String) {
+  getUser(id: $id) { ...UserFields }
+}
+
+query GetUsers {
+  getUsers { ...UserFields }
+}
+
+query GetLetters {
+  getLetters { ...LetterFields }
+}
+
+query GetLetter($id: String) {
+  getLetter(id: $id) { ...LetterFields }
+}
+
+query GetGroups {
+  getGroups { ...GroupFields }
+}
+
+query GetFolders($parent: String) {
+  getFolders(parent: $parent) { ...FolderFields }
+}
+
+query GetFolder($id: String!) {
+  getFolder(id: $id) { ...FolderFields }
+}
+
+query GetTasks {
+  getTasks { ...TaskFields }
+}
+
+query GetTaskTypes {
+  getTaskTypes { ...TaskTypesFeilds }
+}
+
+query GetTask($letter: String) {
+  getTask(letter: $letter) { ...TaskFields }
+}
+
+query GetRecord($id: String, $task: String, $date: String) {
+  getRecord(id: $id, task: $task, date: $date) { ...RecordFields }
+}
+
